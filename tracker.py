@@ -85,7 +85,7 @@ def parse_time(dt_str):
     dt, _, us = dt_str.partition(".")
     dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
     us = int(us.rstrip("Z"), 10)
-    return dt + datetime.timedelta(microseconds=us)
+    return dt + datetime.timedelta(microseconds=us) + datetime.timedelta(hours=5)
 
 
 def get_lines(file_name):
@@ -116,6 +116,9 @@ def main():
         print "Registered filter for %s and %s for the subreddit %s" % (author, title, current_subreddit)
     run()
 
+
+def localize(date_time, tz):
+    return tz.localize(date_time)
 
 if __name__ == '__main__':
     main()
