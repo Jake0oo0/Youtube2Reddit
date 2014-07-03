@@ -1,0 +1,2 @@
+SUBREDDIT:Jake0oo0
+(?s).*:(?s).*
