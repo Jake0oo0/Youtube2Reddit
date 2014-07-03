@@ -53,6 +53,8 @@ def run():
                     if valid:
                         submission = reddit.submit(subreddit=subreddit, title=title, url=link)
                         print "Submitted new video at the URL %s." % submission.short_link
+        global last_check
+        last_check = datetime.datetime.now()
     sleep(search_delay)
 
 
