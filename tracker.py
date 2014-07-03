@@ -31,7 +31,6 @@ def run():
             print "Password or username not found. Exiting."
             exit(0)
         reddit.login(config.get('username'), config.get('password'))
-        subreddit = 'Jake0oo0'
         for channel in channels:
             try:
                 videos = get_videos(channel)
@@ -41,7 +40,7 @@ def run():
             if len(videos) == 0:
                 continue
             for author, title, link, time in videos:
-                for author_filter, title_filter in sorters:
+                for subreddit, author_filter, title_filter in sorters:
                     if author == re.findall(author_filter, author, re.IGNORECASE):
                         valid = True
                     else:
@@ -113,7 +112,7 @@ def main():
             continue
         author = split[0]
         title = split[1]
-        sorters.append((author, title))
+        sorters.append((current_subreddit, author, title))
         print "Registered filter for %s and %s for the subreddit %s" % (author, title, current_subreddit)
     run()
 
