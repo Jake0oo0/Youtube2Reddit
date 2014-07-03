@@ -33,7 +33,11 @@ def run():
         reddit.login(config.get('username'), config.get('password'))
         subreddit = 'Jake0oo0'
         for channel in channels:
-            videos = get_videos(channel)
+            try:
+                videos = get_videos(channel)
+            except Exception:
+                print "Error loading videos for: %s" % channel
+                continue
             if len(videos) == 0:
                 continue
             for author, title, link, time in videos:
