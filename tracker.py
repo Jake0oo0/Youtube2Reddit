@@ -40,15 +40,14 @@ def run():
             if len(videos) == 0:
                 continue
             for author, title, link, time in videos:
+                print "Found a video by", author
                 for subreddit, author_filter, title_filter in sorters:
-                    if author == re.findall(author_filter, author, re.IGNORECASE):
-                        print "Author valid."
+                    if re.findall(author_filter, author, re.IGNORECASE):
                         valid = True
                     else:
                         valid = False
                     if valid and re.findall(title_filter, title, re.IGNORECASE):
                         valid = True
-                        print "Title valid"
                     else:
                         valid = False
                     if valid:
@@ -66,8 +65,6 @@ def get_videos(user):
         link = entry['link'][0]['href']
         title = entry['title']['$t']
         time = entry['published']['$t']
-        #print "TIME WAS:", parse_time(time)
-        #print "CURRENT IS", datetime.datetime.utcnow()
         if ignore_time or parse_time(time) >= last_check:
             entry = (author, title, link, time)
             to_return.append(entry)
@@ -123,6 +120,7 @@ def main():
 
 def localize(date_time, tz):
     return tz.localize(date_time)
+
 
 if __name__ == '__main__':
     main()
