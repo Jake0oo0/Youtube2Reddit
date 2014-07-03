@@ -8,6 +8,11 @@ from time import sleep
 import config
 
 
+if not path.isfile('config.conf'):
+    print "Config not found. Copy default_config.conf to config.conf and edit to your liking. " \
+          "Re-run the program when complete."
+    exit(0)
+
 channels = config.get('channels', [])
 print "Loaded %s channels to watch." % len(channels)
 youtube_link = 'https://gdata.youtube.com/feeds/api/users/{}/uploads?alt=json'
