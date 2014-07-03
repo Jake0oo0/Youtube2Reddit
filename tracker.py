@@ -17,7 +17,7 @@ channels = config.get('channels', [])
 print "Loaded %s channels to watch." % len(channels)
 youtube_link = 'https://gdata.youtube.com/feeds/api/users/{}/uploads?alt=json'
 search_delay = config.get('delay', 30)
-last_check = datetime.datetime.now()
+last_check = datetime.datetime.utcnow()
 ignore_time = config.get('ignore_time', False)
 sorters = []
 
@@ -42,19 +42,21 @@ def run():
             for author, title, link, time in videos:
                 for subreddit, author_filter, title_filter in sorters:
                     if author == re.findall(author_filter, author, re.IGNORECASE):
+                        print "Author valid."
                         valid = True
                     else:
                         valid = False
                     if valid and re.findall(title_filter, title, re.IGNORECASE):
                         valid = True
+                        print "Title valid"
                     else:
                         valid = False
                     if valid:
                         submission = reddit.submit(subreddit=subreddit, title=title, url=link)
                         print "Submitted new video at the URL %s." % submission.short_link
         global last_check
-        last_check = datetime.datetime.now()
-    sleep(search_delay)
+        last_check = datetime.datetime.utcnow()
+        sleep(search_delay)
 
 
 def get_videos(user):
@@ -64,6 +66,8 @@ def get_videos(user):
         link = entry['link'][0]['href']
         title = entry['title']['$t']
         time = entry['published']['$t']
+        #print "TIME WAS:", parse_time(time)
+        #print "CURRENT IS", datetime.datetime.utcnow()
         if ignore_time or parse_time(time) >= last_check:
             entry = (author, title, link, time)
             to_return.append(entry)
@@ -85,7 +89,7 @@ def parse_time(dt_str):
     dt, _, us = dt_str.partition(".")
     dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
     us = int(us.rstrip("Z"), 10)
-    return dt + datetime.timedelta(microseconds=us) + datetime.timedelta(hours=5)
+    return dt + datetime.timedelta(microseconds=us)
 
 
 def get_lines(file_name):
